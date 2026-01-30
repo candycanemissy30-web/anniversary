@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friendship Anniversary ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* We replace the solid bg color with gradients below */
+            --card-bg: rgba(255, 255, 255, 0.85); /* Slightly transparent cards */
+            --accent-pink: #fbcfe8;
+            --deep-pink: #db2777;
+            --text-main: #5d5d5d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            /* --- NEW CREATIVE BACKGROUND --- */
+            background: 
+                radial-gradient(at 18% 23%, #fdf2f8 0px, transparent 50%), 
+                radial-gradient(at 82% 19%, #fce7f3 0px, transparent 50%), 
+                radial-gradient(at 21% 83%, #fbcfe8 0px, transparent 50%), 
+                radial-gradient(at 74% 77%, #fdf4ff 0px, transparent 50%),
+                linear-gradient(to bottom right, #ffe4e6, #fae8ff);
+            background-attachment: fixed; /*Keeps bg in place while scrolling*/
+        }
+
+        /* --- NEW GRAIN TEXTURE OVERLAY --- */
+        .grain-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -2;
+            opacity: 0.4;
+            /* CSS trick to generate noise texture */
+            background-image: repeating-radial-gradient( circle at 17% 32%, rgba(0,0,0,0.03), rgba(0,0,0,0.03) 1px, transparent 1px, transparent 3px);
+            background-size: 20px 20px;
+        }
+
+        /* --- UPDATED BACKGROUND ANIMATION --- */
+        .hearts-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1; overflow: hidden;
+        }
+        .heart-anim {
+            position: absolute; bottom: -10vh;
+            background-color: rgba(255, 255, 255, 0.6); /* Lighter, more subtle hearts */
+            box-shadow: 0 0 10px rgba(255, 182, 193, 0.4);
+            width: 20px; height: 20px;
+            transform: rotate(-45deg);
+            /* Updated animation for swaying effect */
+            animation: floatUp 15s infinite linear, sway 3s ease-in-out infinite alternate;
+        }
+        .heart-anim:before, .heart-anim:after {
+            content: ""; position: absolute;
+            background-color: inherit; width: 20px; height: 20px; border-radius: 50%;
+        }
+        .heart-anim:before { top: -10px; left: 0; }
+        .heart-anim:after { left: 10px; top: 0; }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(-45deg) scale(0.8); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(-120vh) rotate(-45deg) scale(1.1); opacity: 0; }
+        }
+        @keyframes sway {
+            from { margin-left: -15px; }
+            to { margin-left: 15px; }
+        }
+
+        /* --- SHARED STYLES --- */
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 20px; text-align: center;
+        }
+        h1 {
+            font-family: 'Pacifico', cursive; font-size: 3rem; color: var(--deep-pink);
+            margin-bottom: 20px; text-shadow: 2px 2px 0 #fff;
+        }
+        .btn {
+            padding: 12px 30px; border: none; border-radius: 50px;
+            font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 1.1rem;
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(219, 39, 119, 0.2);
+            margin: 10px;
+        }
+        .btn-primary { background: var(--deep-pink); color: white; }
+        .btn-secondary { background: white; color: var(--deep-pink); }
+        .btn:hover { transform: scale(1.05); }
+
+        /* --- PAGE 1: INTRO --- */
+        #page-intro {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 1s ease-out;
+        }
+        
+        .countdown-box {
+            display: flex; gap: 15px; justify-content: center; margin: 30px 0;
+        }
+        .time-unit {
+            /* Made backgrounds slightly transparent to show the new bg */
+            background: var(--card-bg); padding: 15px; border-radius: 15px;
+            min-width: 80px; border: 2px solid var(--accent-pink);
+            backdrop-filter: blur(5px); /* Glassmorphism effect */
+        }
+        .time-unit span { font-size: 1.5rem; font-weight: bold; color: var(--deep-pink); display: block; }
+        
+        .quote-intro {
+            font-style: italic; max-width: 600px; margin: 0 auto 40px auto; color: #555;
+            background: rgba(255,255,255,0.4); padding: 10px 20px; border-radius: 20px;
+        }
+
+        .question-box {
+            background: var(--card-bg); padding: 40px; border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(219, 39, 119, 0.15);
+            position: relative; 
+            backdrop-filter: blur(5px);
+            border: 3px solid #fff;
+        }
+        
+        .buttons-wrapper {
+            margin-top: 20px; display: flex; justify-content: center; gap: 20px; position: relative;
+        }
+
+        /* --- PAGE 2: GALLERY --- */
+        #page-gallery {
+            display: none; /* Hidden initially */
+            opacity: 0;
+            transition: opacity 1s ease-in;
+            padding-bottom: 100px;
+        }
+
+        .gallery-grid {
+            columns: 2; column-gap: 20px; max-width: 1000px; margin: 40px auto;
+        }
+        @media(min-width: 768px) { .gallery-grid { columns: 3; } }
+
+        .polaroid {
+            background: white; padding: 10px 10px 25px 10px;
+            border-radius: 4px; margin-bottom: 20px; break-inside: avoid;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: rotate(var(--r)); transition: transform 0.3s;
+        }
+        .polaroid:hover { transform: scale(1.05) rotate(0deg) !important; z-index: 10; }
+        .polaroid img { width: 100%; border-radius: 2px; }
+        .caption { font-family: 'Pacifico', cursive; margin-top: 10px; color: #888; }
+
+        /* --- MODALS (Shared) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none;
+            justify-content: center; align-items: center; z-index: 100;
+            backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background: #fff; padding: 40px; border-radius: 30px;
+            width: 90%; max-width: 600px; text-align: center;
+            position: relative;
+            /* Cute dot pattern inside modals */
+            background-image: radial-gradient(#fbcfe8 1px, transparent 1px);
+            background-size: 15px 15px;
+            max-height: 80vh; overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 4px solid #fff;
+        }
+        .close-modal {
+            position: absolute; top: 15px; right: 20px;
+            font-size: 28px; cursor: pointer; color: var(--accent-pink); transition: color 0.2s;
+        }
+        .close-modal:hover { color: var(--deep-pink); }
+        
+        /* Resolution specific */
+        #todo-input {
+            width: 70%; padding: 12px; border: 2px solid var(--accent-pink);
+            border-radius: 50px; outline: none; margin-right: 5px; font-family: 'Quicksand';
+        }
+        #todo-list {
+            list-style: none; margin-top: 20px; text-align: left;
+        }
+        #todo-list li {
+            padding: 10px; border-bottom: 2px dashed #fce7f3; display: flex; align-items: center; justify-content: space-between;
+        }
+        .todo-text:before { content: "🎀"; margin-right: 10px; font-size: 1rem; }
+        .delete-btn { color: #ff6b6b; cursor: pointer; font-weight: bold; margin-left: 10px; font-size: 1.2rem;}
+
+        /* Letter specific */
+        .letter-text {
+            text-align: left; line-height: 1.9; font-size: 1.1rem; color: #555;
+            white-space: pre-wrap; 
+            margin-top: 25px; padding: 20px;
+            background: rgba(255,255,255,0.9); border-radius: 15px;
+            border: 2px dashed var(--accent-pink);
+        }
+
+        /* Utility for the 'No' button movement */
+        #btn-no { position: relative; transition: top 0.1s, left 0.1s; }
+
+    </style>
+</head>
+<body>
+
+    <div class="grain-overlay"></div>
+    <div class="hearts-bg" id="hearts-container"></div>
+
+    <section id="page-intro">
+        <div class="container">
+            <h1>Happy Friendship Anniversary! 🎉</h1>
+            <p style="margin-bottom: 10px; font-size: 1.3rem; font-weight: bold; color: var(--deep-pink);">Counting down to Feb 26th...</p>
+            
+            <div class="countdown-box" id="countdown"></div>
+
+            <div class="quote-intro">
+                "Friendship isn't a big thing. It's a million little things."
+            </div>
+
+            <div class="question-box">
+                <h2>Are you excited for another year together? 🥺</h2>
+                <div class="buttons-wrapper">
+                    <button class="btn btn-primary" onclick="showGallery()">YES! 😍</button>
+                    <button class="btn btn-secondary" id="btn-no" onmouseover="moveButton()">No 🙄</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="page-gallery">
+        <div class="container">
+            <h1 style="margin-top: 50px;">Best Memories 📸</h1>
+            
+            <div class="gallery-grid">
+                <div class="polaroid" style="--r: -3deg;">
+                    <img src="the dynamic duo.jpeg" alt="Memory">
+                    <div class="caption">The Dynamic Duo ✨</div>
+                </div>
+                <div class="polaroid" style="--r: 2deg;">
+                    <img src="vibes on point.jpeg" alt="Memory">
+                    <div class="caption">Vibes on Point ✌️</div>
+                </div>
+                <div class="polaroid" style="--r: -2deg;">
+                    <img src="partners in crime.jpeg" alt="Memory">
+                    <div class="caption">Partners in Crime 🌸</div>
+                </div>
+                <div class="polaroid" style="--r: 4deg;">
+                    <img src="always smiling.jpeg" alt="Memory">
+                    <div class="caption">Always Smiling 😊</div>
+                </div>
+                <div class="polaroid" style="--r: -4deg;">
+                    <img src="upside down.jpeg" alt="Memory">
+                    <div class="caption">Upside Down 🙃</div>
+                </div>
+                <div class="polaroid" style="--r: 1deg;">
+                    <img src="crazy us.jpeg" alt="Memory">
+                    <div class="caption">Crazy Us 🤪</div>
+                </div>
+                 <div class="polaroid" style="--r: 3deg;">
+                    <img src="slaying looks.jpeg" alt="Memory">
+                    <div class="caption">Slaying Looks 🔥</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; display: flex; justify-content: center; flex-wrap: wrap;">
+                <button class="btn btn-secondary" onclick="openThoughts()">My Thoughts 💭</button>
+                <button class="btn btn-primary" onclick="openResolutions()">📝 Our Resolutions</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="thoughts-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeThoughts()">&times;</span>
+            <h2 style="font-family: 'Pacifico', cursive; color: var(--deep-pink);">To My Bestie... 💌</h2>
+            
+            <div class="letter-text">
+Happy Friendship Anniversary!🎀🌸✨ 
+
+Hey Fluffy, I just wanted to say thank you so much for being here for me throughout my highs and lows, each and every aspect of life. I love everything about you and our friendship, the bond we share is something I can't explain in words and I really value our bond, it means a lot to me and I care about you more than anything in this world. I don't know how my life would be without you so I need you with me. I've planned many things for us and I will work really hard to fulfill all our plans. I don't know what my future looks like but I know one thing for sure that no matter how many years have passed you'll always be with me. So yeah you're my dummy my besto friendooo and the love of my life. I'll always be here for you.
+East or west my Fluffy is the best!!! 💟
+You're my motivation & my muse, you're the person I write songs about.
+2 years down the line and many more to go.
+I'm really proud of you & I'm really sorry if I ever hurt you or made you question your worth or disrespected you..
+Happy Anniversary Fluffyyy 🧿✨
+Your Soulmate & Best Friend ~ Lil Princess 🎀🧿✨
+            </div>
+            </div>
+    </div>
+
+    <div class="modal-overlay" id="resolution-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeResolutions()">&times;</span>
+            <h2 style="font-family: 'Pacifico', cursive; color: var(--deep-pink);">Friendship Goals 🎀</h2>
+            <p style="color: #888; margin-bottom: 20px; font-size: 0.9rem;">What should we do this year?</p>
+            
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <input type="text" id="todo-input" placeholder="e.g., Go on a road trip...">
+                <button class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem;" onclick="addResolution()">Add</button>
+            </div>
+
+            <ul id="todo-list">
+                </ul>
+        </div>
+    </div>
+
+    <script>
+        /* --- 1. COUNTDOWN LOGIC --- */
+        const anniversaryDate = new Date("Feb 26, 2026 00:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = anniversaryDate - now;
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "<h3>It's Today! Happy Anniversary! 💖</h3>";
+                return;
+            }
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById("countdown").innerHTML = `
+                <div class="time-unit"><span>${days}</span><small>Days</small></div>
+                <div class="time-unit"><span>${hours}</span><small>Hrs</small></div>
+                <div class="time-unit"><span>${minutes}</span><small>Mins</small></div>
+            `;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        /* --- 2. THE RUNAWAY BUTTON --- */
+        function moveButton() {
+            const btn = document.getElementById('btn-no');
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 100);
+            btn.style.position = 'fixed';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+
+        /* --- 3. PAGE TRANSITION --- */
+        function showGallery() {
+            const intro = document.getElementById('page-intro');
+            const gallery = document.getElementById('page-gallery');
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.style.display = 'none';
+                gallery.style.display = 'block';
+                void gallery.offsetWidth; 
+                gallery.style.opacity = '1';
+                for(let i=0; i<20; i++) createHeart();
+            }, 1000);
+        }
+
+        /* --- 4. THOUGHTS MODAL --- */
+        function openThoughts() {
+            document.getElementById('thoughts-modal').style.display = 'flex';
+        }
+        function closeThoughts() {
+            document.getElementById('thoughts-modal').style.display = 'none';
+        }
+
+        /* --- 5. RESOLUTIONS (SAVED TO LOCAL STORAGE) --- */
+        document.addEventListener('DOMContentLoaded', loadResolutions);
+
+        function openResolutions() {
+            document.getElementById('resolution-modal').style.display = 'flex';
+        }
+        function closeResolutions() {
+            document.getElementById('resolution-modal').style.display = 'none';
+        }
+
+        function getResolutions() {
+            const stored = localStorage.getItem('friendResolutions');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function saveResolutions(list) {
+            localStorage.setItem('friendResolutions', JSON.stringify(list));
+        }
+
+        function loadResolutions() {
+            const list = document.getElementById('todo-list');
+            list.innerHTML = ""; 
+            const resolutions = getResolutions();
+            resolutions.forEach((text, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span class="todo-text">${text}</span>
+                    <span class="delete-btn" onclick="deleteResolution(${index})">&times;</span>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function addResolution() {
+            const input = document.getElementById('todo-input');
+            const text = input.value.trim();
+            if (text !== "") {
+                const resolutions = getResolutions();
+                resolutions.push(text);
+                saveResolutions(resolutions);
+                input.value = ""; 
+                loadResolutions(); 
+            }
+        }
+
+        function deleteResolution(index) {
+            const resolutions = getResolutions();
+            resolutions.splice(index, 1);
+            saveResolutions(resolutions);
+            loadResolutions(); 
+        }
+
+        /* --- 6. BACKGROUND HEARTS --- */
+        const heartsContainer = document.getElementById('hearts-container');
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-anim');
+            // Randomize position and size slightly
+            const size = Math.random() * 15 + 10;
+            heart.style.width = size + 'px';
+            heart.style.height = size + 'px';
+            heart.style.left = Math.random() * 100 + "vw";
+            // Slower, more gentle animation
+            heart.style.animationDuration = Math.random() * 10 + 15 + "s, " + (Math.random() * 2 + 3) + "s"; 
+            
+            heartsContainer.appendChild(heart);
+            setTimeout(() => heart.remove(), 25000);
+        }
+        // Create hearts slightly less frequently so it's not too busy
+        setInterval(createHeart, 1500); 
+        // Create a few immediately on load
+        for(let i=0; i<5; i++) createHeart();
+
+    </script>
+</body>
+</html>
